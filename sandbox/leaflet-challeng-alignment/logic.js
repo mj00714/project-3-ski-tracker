@@ -90,7 +90,7 @@ function createMap(earthquakes) {
 
         for (let i = 0; i < depth.length; i++) {
             div.innerHTML +=
-            '<i style="background:' + colorScale(depth[i] + 1) + '"></i> ' + depth[i] + (depth [i + 1] ? '&ndash;' + depth[i + 1] + '<br>' : '+');
+            '<li style="background:' + colorScale(depth[i] + 1) + '"></li> ' + depth[i] + (depth [i + 1] ? '&ndash;' + depth[i + 1] + '<br>' : '+');
         }
         return div;
     };
