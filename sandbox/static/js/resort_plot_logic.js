@@ -11,15 +11,38 @@ let myMap = L.map("map", {
 
 streetmap.addTo(myMap);
 
-let ski_url = "https://ski-resorts-and-conditions.p.rapidapi.com/v1/resort/whistler-blackcomb";
+let MongoClient = require('mongodb').MongoClient;
+let url = 'mongodb://localhost:27017';
+let dbName = 'ski-tracker-master-db';
+let client = new MongoClient(url, { useUnifiedTopology: true });
 
-let options = {
-    method: "GET",
-    headers: {
-	    "X-RapidAPI-Key": "f9fac65684msh6b17d61b8352a7fp16af60jsn1e07a303840b",
-	    "X-RapidAPI-Host": "ski-resorts-and-conditions.p.rapidapi.com"
-    }
-};
+// Connect to the MongoDB server
+client.connect(function(err) {
+    if (err) {
+      console.error('Error connecting to MongoDB:', err);
+      return;
+    }  
+    console.log('Connected to MongoDB');
+  
+    // Select the database
+    let db = client.db(dbName);
+  
+    // Perform your query
+    let collection = db.collection('resort_master');
+  
+    // Example query: Find all documents in the collection
+    collection.find({}).toArray(function(err, documents) {
+      if (err) {
+        console.error('Error executing query:', err);
+        return;
+      }
+  
+      console.log('Query result:', documents);
+  
+      // Close the connection
+      client.close();
+    });
+  });
 
 function createResortMarkers(ski_response) {
 
