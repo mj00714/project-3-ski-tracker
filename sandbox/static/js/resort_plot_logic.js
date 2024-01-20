@@ -1,15 +1,18 @@
 // The function createResortMarkers is a function that takes in the json data from the json
-// file created by query.ipynb and assigns each of the resorts to a layer depending on when
-// in the next 48 hours snow is expected.
+// file created by query.ipynb as well as user input for starting coordinates. It then assigns
+// each of the resorts to a layer depending on which resort passes they accept.
+//
+// It also assigns marker fill color based on snow forecast. The markers, when clicked,
+// display the name of the resort, how far (in miles) they are frm the user's starting coordinates,
+// and the chances of snow.
 
 function createResortMarkers(data, startPoint) {
 
     // Save the imported data to an object and declare the arrays
-    // to which resorts will be added for each layer.
+    // to which resorts will be added for each layer based on resort passes.
     let resorts = data;
-    let snow12Hours = [];
-    let snow24Hours = [];
-    let snow48Hours = [];
+    let ikonPasses = [];
+    let epicPasses = [];
     let remainderResorts = [];
 
     // Iterate through the resorts in the imported data
@@ -32,46 +35,55 @@ function createResortMarkers(data, startPoint) {
       // Set radius
       let radius = 10000;
         
-      // Set fillColor
-      let fillColor = 'green';
+      // Set fillColor based on snow forecast
+      let fillColor = 'black';
+      let snow_info = "";
 
-      // Assign the resort to one of the arrays depending on when snow is forecast.
-      // First assign resorts expecting snow within 12 hours. 
+      // Assign green to resorts with chance of snow within 12 hours
       if (resort.snow_firstperiod === true) {
-          snow12Hours.push(L.circle([lat, long], {
-            color: fillColor,
-            fillColor: fillColor,
-            fillOpacity: 0.75,
-            radius: radius
-      }).bindPopup("<h3>Name: " + name + "<h3><h3>" + distance + " miles away</h3>"));
+        fillColor = 'green';
+        snow_info = "Chance of Snow (12 Hours): " + resort.precip_chance_firstperiod + "%";
 
-      // Next assign resorts expecting snow between 12 and 24 hours
-      } else if (resort.snow_secondperiod === true) {
-          snow24Hours.push(L.circle([lat, long], {
-            color: fillColor,
-            fillColor: fillColor,
-            fillOpacity: 0.75,
-            radius: radius
-      }).bindPopup("<h3>Name: " + name + "<h3><h3>" + distance + " miles away</h3>"));
+      // Assign yellow to resorts with chance of snow between 12 and 24 hours
+      } else if (resort.snow_seconderiod === true) {
+        fillColor = 'yellow';
+        snow_info = "Chance of Snow (24 Hours): " + resort.precip_chance_secondperiod + "%";
 
-      // Next assign resorts expecting snow between 24 and 48 hours
+      // Assign orange to resorts with chance of snow beween 24 and 48 hours
       } else if (resort.snow_thirdperiod === true || resort.snow_fourthperiod === true) {
-          snow48Hours.push(L.circle([lat, long], {
-            color: fillColor,
-            fillColor: fillColor,
-            fillOpacity: 0.75,
-            radius: radius
-            }).bindPopup("<h3>Name: " + name + "<h3><h3>" + distance + " miles away</h3>"));
-
-       // Assign all the remaining resorts to their own array 
-       } else {
-          remainderResorts.push(L.circle([lat, long], {
-            color: fillColor,
-            fillColor: fillColor,
-            fillOpacity: 0.75,
-            radius: radius
-          }).bindPopup("<h3>Name: " + name + "<h3><h3>" + distance + " miles away</h3>"));
+        fillColor = 'orange';
+        let snowChance = Math.max(resort.precip_chance_thirdperiod, resort.precip_chance_fourthperiod);
+        snow_info = "Chance of Snow (48 Hours): " + snowChance + "%";
       }
+
+      // Assign the resort to one of the arrays depending on resort pass.
+      // First assign resorts for Epic passes. 
+      if (resort['pass type'] === 'Epic') {
+        epicPasses.push(L.circle([lat, long], {
+          color: fillColor,
+          fillColor: fillColor,
+          fillOpacity: 0.75,
+          radius: radius
+      }).bindPopup("<h3>Name: " + name + "<h3><h3>" + distance + " miles away<h3><h3>" + snow_info));
+
+      // Next assign resorts for Ikon passes
+      } else if (resort['pass type'] === 'Ikon') {
+        ikonPasses.push(L.circle([lat, long], {
+          color: fillColor,
+          fillColor: fillColor,
+          fillOpacity: 0.75,
+          radius: radius
+      }).bindPopup("<h3>Name: " + name + "<h3><h3>" + distance + " miles away<h3><h3>" + snow_info));
+
+      // Assign all the remaining resorts to their own array 
+      } else {
+        remainderResorts.push(L.circle([lat, long], {
+          color: fillColor,
+          fillColor: fillColor,
+          fillOpacity: 0.75,
+          radius: radius
+        }).bindPopup("<h3>Name: " + name + "<h3><h3>" + distance + " miles away<h3><h3>" + snow_info));
+      } 
     };
 
     // Create the tile layer that will be the background of the map
@@ -79,20 +91,16 @@ function createResortMarkers(data, startPoint) {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     });
 
-    // Create the layer group for resorts expecting snow in 12 hours
-    let twelveHours = L.layerGroup(snow12Hours);
+    // Create the layer group for resorts with Epic passes
+    let epicPassGroup = L.layerGroup(epicPasses);
     
-    // Create the layer group for resorts expecting snow in 24 hours
-    let tempArray1 = snow12Hours.concat(snow24Hours);
-    let twentyfourHours = L.layerGroup(tempArray1);
-    
-    // Create the layer group for resorts expecting snow in 48 hours
-    let tempArray2 = tempArray1.concat(snow48Hours);
-    let fortyeightHours = L.layerGroup(tempArray2);
-
-    // Create the layer group containing all the resorts
-    let tempArray3 = tempArray2.concat(remainderResorts);
-    let allResorts = L.layerGroup(tempArray3);
+    // Create the layer group for resorts with Ikon passes
+    let ikonPassGroup = L.layerGroup(ikonPasses);
+        
+    // Create an array with all the resorts and assign to resort group
+    let tempArray1 = epicPasses.concat(ikonPasses);
+    let allResortArray = tempArray1.concat(remainderResorts);
+    let allResortsGroup = L.layerGroup(allResortArray);
 
     // Assign street map to base layer
     let baseMap = {
@@ -101,10 +109,9 @@ function createResortMarkers(data, startPoint) {
 
     // Assign the different layer groups to the overlay layers
     let overlayMaps = {
-      "Snow Forecast 12 Hours": twelveHours,
-      "Snow Forecast 24 Hours": twentyfourHours,
-      "Snow Forecast 48 Hours": fortyeightHours,
-      "All Resorts": allResorts
+      "Epic Resort Pass": epicPassGroup,
+      "Ikon Resort Pass": ikonPassGroup,
+      "All Resorts": allResortsGroup
     };
 
     // Create the map with just the base layer initially showing
