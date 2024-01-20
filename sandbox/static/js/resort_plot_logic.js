@@ -4,7 +4,7 @@
 //
 // It also assigns marker fill color based on snow forecast. The markers, when clicked,
 // display the name of the resort, how far (in miles) they are frm the user's starting coordinates,
-// and the chances of snow.
+// and the forecast information.
 
 function createResortMarkers(data, startPoint) {
 
@@ -42,18 +42,30 @@ function createResortMarkers(data, startPoint) {
       // Assign green to resorts with chance of snow within 12 hours
       if (resort.snow_firstperiod === true) {
         fillColor = 'green';
+        if (resort.country === "CA") {
+          snow_info = "Forecast (12 Hours): " + resort.forecast_firstperiod;
+        } else {
         snow_info = "Chance of Snow (12 Hours): " + resort.precip_chance_firstperiod + "%";
+        }
 
       // Assign yellow to resorts with chance of snow between 12 and 24 hours
       } else if (resort.snow_seconderiod === true) {
         fillColor = 'yellow';
-        snow_info = "Chance of Snow (24 Hours): " + resort.precip_chance_secondperiod + "%";
+        if (resort.country === "CA") {
+          snow_info = "Forecast (24 Hours): " + resort.forecast_secondperiod;
+        } else {
+          snow_info = "Chance of Snow (24 Hours): " + resort.precip_chance_secondperiod + "%";
+        }
 
       // Assign orange to resorts with chance of snow beween 24 and 48 hours
       } else if (resort.snow_thirdperiod === true || resort.snow_fourthperiod === true) {
         fillColor = 'orange';
-        let snowChance = Math.max(resort.precip_chance_thirdperiod, resort.precip_chance_fourthperiod);
-        snow_info = "Chance of Snow (48 Hours): " + snowChance + "%";
+        if (resort.country === "CA") {
+          snow_info = "Forecast (48 Hours): " + resort.forecast_fourthperiod;
+        } else {
+          let snowChance = Math.max(resort.precip_chance_thirdperiod, resort.precip_chance_fourthperiod);
+          snow_info = "Chance of Snow (48 Hours): " + snowChance + "%";
+        }
       }
 
       // Assign the resort to one of the arrays depending on resort pass.
