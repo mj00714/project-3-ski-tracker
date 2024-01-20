@@ -2,7 +2,7 @@
 // file created by query.ipynb and assigns each of the resorts to a layer depending on when
 // in the next 48 hours snow is expected.
 
-function createResortMarkers(data) {
+function createResortMarkers(data, startPoint) {
 
     // Save the imported data to an object and declare the arrays
     // to which resorts will be added for each layer.
@@ -23,6 +23,12 @@ function createResortMarkers(data) {
       let long = resort.location.longitude;
       let name = resort.name;
 
+      // Find the distance using the user input lat/long coordinates
+      fromPoint = turf.point(startPoint);
+      destPoint = turf.point([lat, long]);
+      let options = {units: 'miles'};
+      let distance = Math.round(turf.distance(fromPoint, destPoint, options));
+
       // Set radius
       let radius = 10000;
         
@@ -37,7 +43,7 @@ function createResortMarkers(data) {
             fillColor: fillColor,
             fillOpacity: 0.75,
             radius: radius
-      }).bindPopup("<h3>Name: " + name + "</h3>"));
+      }).bindPopup("<h3>Name: " + name + "<h3><h3>" + distance + " miles away</h3>"));
 
       // Next assign resorts expecting snow between 12 and 24 hours
       } else if (resort.snow_secondperiod === true) {
@@ -46,7 +52,7 @@ function createResortMarkers(data) {
             fillColor: fillColor,
             fillOpacity: 0.75,
             radius: radius
-      }).bindPopup("<h3>Name: " + name + "</h3>"));
+      }).bindPopup("<h3>Name: " + name + "<h3><h3>" + distance + " miles away</h3>"));
 
       // Next assign resorts expecting snow between 24 and 48 hours
       } else if (resort.snow_thirdperiod === true || resort.snow_fourthperiod === true) {
@@ -55,7 +61,7 @@ function createResortMarkers(data) {
             fillColor: fillColor,
             fillOpacity: 0.75,
             radius: radius
-            }).bindPopup("<h3>Name: " + name + "</h3>"));
+            }).bindPopup("<h3>Name: " + name + "<h3><h3>" + distance + " miles away</h3>"));
 
        // Assign all the remaining resorts to their own array 
        } else {
@@ -64,7 +70,7 @@ function createResortMarkers(data) {
             fillColor: fillColor,
             fillOpacity: 0.75,
             radius: radius
-          }).bindPopup("<h3>Name: " + name + "</h3>"));
+          }).bindPopup("<h3>Name: " + name + "<h3><h3>" + distance + " miles away</h3>"));
       }
     };
 
@@ -114,7 +120,13 @@ function createResortMarkers(data) {
     }).addTo(myMap);
 };
 
+// Prompt the user for starting coordinates
+// const userLatString = prompt("Please Enter Your Starting Latitude: ");
+// const userLongString = prompt("Please Enter Your Starting Longitude: ");
+// const userStartPoint = [parseFloat(userLatString), parseFloat(userLongString)];
+const userStartPoint = [33.83, -111.95];
+
 // Use createResortMarkers function to create the map from the imported resort data
 d3.json("resort_data.json").then((importedData) => {
-  createResortMarkers(importedData);
+  createResortMarkers(importedData, userStartPoint);
 });
