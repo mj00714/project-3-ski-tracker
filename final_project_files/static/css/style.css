@@ -42,6 +42,8 @@ html {
   width: 30px;
   height: 22px;
   margin-right: 5px;
+  line-height: 1.5;
+  vertical-align: middle;
 }
 h1 {
   text-align: center;
