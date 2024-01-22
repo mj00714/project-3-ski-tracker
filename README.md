@@ -67,9 +67,9 @@ Data Visualization Track
 
 ### Overview
 
-This project is a shout out to all of the powder hounds out there. Our target user is anyone who has ever planned a ski trip and found themself on a mountain with no snow. We wanted to create a resource that would help ski and snowboard enthusiasts plan better trips. 
+This project is a shout out to all of the powder hounds out there. Our target user is anyone who has ever planned a ski trip and found themself on a mountain with out snow. We wanted to create a resource that would help ski and snowboard enthusiasts plan better trips. 
 
-Trips to the mountains are expensive and can be present logistical challenges. Plane reservations, lift tickets, hotel/AirBnB accommodations- the costs add up quickly. Most dedicated riders can stomach the prices if one element falls into place: snow. Powder days are the holy grail of ski trips. Our goal was to deliver more of those. 
+Mountain excursions are expensive and can be present logistical challenges. Plane reservations, lift tickets, hotel / AirBnB accommodations – all can present obstacles for would be snow athletes.  While most dedicated riders can stomach the prices and planning, the trip can take a dramatic downturn if one element doesn’t fall into place: snow. Our goal is to deliver more snowy days on the hill. 
 
 ### Instructions
 
