@@ -123,4 +123,8 @@ The information we used to create the tool is readily available to the public bu
 - RapidAPI, Ski Resort and Conditions API https://rapidapi.com/hub
 - Ikon Pass https://www.ikonpass.com
 - Epic Pass https://www.epicpass.com
-- 
+- US Weather https://www.weather.gov/documentation/services-web-api
+- CAN Weather https://dd.weather.gc.ca/citypage_weather/xml/
+
+### Code References
+Code for this project was written by the project team members. Templates and structure were borrowed from examples covered in the course and documentation provided by the library authors. 
