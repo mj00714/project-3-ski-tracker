@@ -1,21 +1,37 @@
-// The function createResortMarkers is a function that takes in the json data from the json
-// file created by query.ipynb as well as user input for starting coordinates. It then assigns
-// each of the resorts to a layer depending on which resort passes they accept.
+// The function createResortMarkers is a function that creats a map with markers for each
+// resort in the Mongo database. The function takes three arguments:
 //
-// It also assigns marker fill color based on snow forecast. The markers, when clicked,
-// display the name of the resort, how far (in miles) they are frm the user's starting coordinates,
-// and the forecast information.
+//        data - json data from resort_data.json, which is created by query.ipynb
+//        startPoint - user input on their current location to calculate the distance to each
+//      resort
+//        forecast - user input for what time period (either 12, 24, 36, or 48 hours ahead) they
+//      want snow forecast information for
+//
+// The file resort_data.json contains information on each ski resort (which is stored in the Mongo database)
+// as well as weather data pulled from American and Canadian weather APIs.
+//
+// The createResortMarkers function assigns markers to three overlay layers corresponding to the lift passes accepted
+// at each ski resort. The layers are "Ikon", "Epic", and "All Resorts" and can be selected by the user in the map.
+//
+// The color of each marker corresponds to the snow forecast. The colors are assigned as follows:
+//
+//         Green: the ski resort has snow in the forecast at the specified time period with chances >= 50%
+//         Yellow: the ski resort has snow in the forecast at the specified time period with chances < 50%
+//         Blue: the ski resort has snow in the forecast at the specified time period with no precipitation
+//       probability data available
+//         Black: the ski resort either doesn't have snow in the forecast at the specified time period or weather data
+//       is unavailable.
 
 function createResortMarkers(data, startPoint, forecast) {
 
-    // Save the imported data to an object and declare the arrays
-    // to which resorts will be added for each layer based on resort passes.
+    // Save the imported data to an object and declare the arrays to which resorts
+    // will be added for each overlay layer based on accepted resort passes
     let resorts = data;
     let ikonPasses = [];
     let epicPasses = [];
     let remainderResorts = [];
 
-    // Use the user's forecast selection to determine which data to display
+    // Use the user's forecast time period selection to determine which forecast data to display
     if (forecast == "12") {
       forecastChoice = "firstperiod";
     } else if (forecast == "24") {
@@ -24,7 +40,7 @@ function createResortMarkers(data, startPoint, forecast) {
       forecastChoice = "thirdperiod";
     }  else if (forecast == "48") {
         forecastChoice = "fourthperiod";
-    }
+    };
 
     // Iterate through the resorts in the imported data
     for (let index=0; index<resorts.length; index++) {
@@ -37,16 +53,16 @@ function createResortMarkers(data, startPoint, forecast) {
       let long = resort.location.longitude;
       let name = resort.name;
 
-      // Find the distance using the user input lat/long coordinates
+      // Find the distance to the resort using the Turf library and the user-input lat/long coordinates
       fromPoint = turf.point(startPoint);
       destPoint = turf.point([lat, long]);
       let options = {units: 'miles'};
       let distance = Math.round(turf.distance(fromPoint, destPoint, options));
 
-      // Set radius
+      // Set the marker circle radius
       let radius = 10000;
         
-      // Initialize fillColor and snow info to display
+      // Initialize fillColor and forecast data to display
       let fillColor = 'black';
       let snow_info = "";
       let snow_chance = "";
@@ -76,11 +92,11 @@ function createResortMarkers(data, startPoint, forecast) {
         // For American resorts with no snow in the forecast, just display the forecast summary
         // and keep fill color black.
         snow_info = "Forecast: " + resort['forecast_' + forecastChoice];
-      }
+      };
 
-      // Assign the resort to one of the arrays depending on resort pass.
+      // Assign the resort to one of the arrays depending on which lift pass the resort accepts.
       // First assign resorts for Epic passes. 
-      if (resort['pass type'] === 'Epic') {
+      if (resort.pass_type === 'Epic') {
         epicPasses.push(L.circle([lat, long], {
           color: fillColor,
           fillColor: fillColor,
@@ -89,7 +105,7 @@ function createResortMarkers(data, startPoint, forecast) {
       }).bindPopup("<h3>Name: " + name + "<h3><h3>" + distance + " miles away<h3><h3>" + snow_info + "<h3><h3>" + snow_chance + "</h3>"));
 
       // Next assign resorts for Ikon passes
-      } else if (resort['pass type'] === 'Ikon') {
+      } else if (resort.pass_type === 'Ikon') {
         ikonPasses.push(L.circle([lat, long], {
           color: fillColor,
           fillColor: fillColor,
@@ -119,12 +135,12 @@ function createResortMarkers(data, startPoint, forecast) {
     // Create the layer group for resorts with Ikon passes
     let ikonPassGroup = L.layerGroup(ikonPasses);
         
-    // Create an array with all the resorts and assign to resort group
+    // Create an array with all the resorts and assign them to allResortsGroup
     let tempArray1 = epicPasses.concat(ikonPasses);
     let allResortArray = tempArray1.concat(remainderResorts);
     let allResortsGroup = L.layerGroup(allResortArray);
 
-    // Assign street map to base layer
+    // Set the street map as the base layer
     let baseMap = {
       "Street Map": streetmap
     };
@@ -136,7 +152,7 @@ function createResortMarkers(data, startPoint, forecast) {
       "All Resorts": allResortsGroup
     };
 
-    // Create the map with just the base layer initially showing
+    // Create the map with just the base layer initially showing and none of the overlay layers pre-selected
     let myMap = L.map("map", {
     center: [40, -100],
     zoom: 5,
@@ -147,18 +163,44 @@ function createResortMarkers(data, startPoint, forecast) {
     L.control.layers(baseMap, overlayMaps, {
       collapsed: false
     }).addTo(myMap);
+
+    let legend = L.control({position: 'bottomright'});
+    legend.onAdd = function() {
+      let div = L.DomUtil.create("div", "legend"),
+      snowProb = [">50%", "<50%", "Chance Not Available", "No Snow or Forecast Unavailable"];
+      let colors = ['green', 'yellow', 'blue', 'black'];
+      let labels = [];
+
+      let legendInfo = "<h1 style='text-align: center'>Chance of Snow</h1>" +
+                        "<div class=\"min\">" + snowProb[0] + "<div>" +
+                        "<div class=\"min\">" + snowProb[1] + "<div>" +
+                        "<div class=\"min\">" + snowProb[2] + "<div>" +
+                        "<div class=\"min\">" + snowProb[3] + "</div>";
+
+      div.innerHTML = legendInfo;
+
+      snowProb.forEach(function(prob, index) {
+        labels.push("<li style=\"background-color: " + colors[index] + "\"></li>");
+      });
+
+      div.innerHTML += "<ul>" + labels.join("") + "</ul>";
+      return div;
+    };
+    legend.addTo(myMap);
 };
 
-// Prompt the user for starting coordinates
-// const userLatString = prompt("Please Enter Your Starting Latitude: ");
-// const userLongString = prompt("Please Enter Your Starting Longitude: ");
+// Prompt the user for starting coordinates. For Phoenix enter lat: 33.5, long: -112
+// const userLatString = prompt("Please Enter Your Starting Latitude (33.5 for Phoenix): ");
+// const userLongString = prompt("Please Enter Your Starting Longitude (-112 for Phoenix): ");
 // const userStartPoint = [parseFloat(userLatString), parseFloat(userLongString)];
-const userStartPoint = [33.83, -111.95];
-
-// Prompt the user for forecast period selection: 12 hour, 24 hour, 36 hour, 48 hour
-const forecastSelection = prompt("Please enter 12, 24, 36 or 48 for forecast period: ");
+const userStartPoint = [33.5, -112];
 
 // Use createResortMarkers function to create the map from the imported resort data
 d3.json("resort_data.json").then((importedData) => {
+
+  // Prompt the user for forecast period selection (either 12, 24, 36, or 48 hours ahead)
+  const forecastSelection = prompt("Please enter 12, 24, 36 or 48 for forecast period: ");
+
+  // Create the map using the user input
   createResortMarkers(importedData, userStartPoint, forecastSelection);
 });
