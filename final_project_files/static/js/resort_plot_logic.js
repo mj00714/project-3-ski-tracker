@@ -168,7 +168,7 @@ function createResortMarkers(data, startPoint, forecast) {
     let legend = L.control({ position: "bottomright" });
     legend.onAdd = function() {
       let div = L.DomUtil.create("div", "info legend");
-      let categories = ['> 50%','< 50%','% Unavailable','No Snow or Forecast Unavailable'];
+      let categories = ['> 50%','< 50%','% Unavailable','No Snow Forecast'];
       let labelColors = ['green', 'yellow', 'blue', 'black'];
 
       let legendInfo = "<h1>Chance of Snow<br /></h1>" +
