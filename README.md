@@ -2,7 +2,7 @@
 
 # Proposal / Overview
 
-For our third project, we're seeking to build on the material we've covered in the last few modules. We're aiming to create a visualization that will display ski resorts along with their recent snowfall metrics. 
+For our third project, we're seeking to build on the material we've covered in the last few modules. We're aiming to create a visualization that will display ski resorts along with their forecasted snowfall. 
 
 ### Data
 We're utilizing RapidAPI to pull a list of 148 ski resorts (satisfying the project requirement of 100+ records). There are two different views of the resort data- a basic and detailed view. We'll leverage the basic view to avoid paying for API usage. 
@@ -50,7 +50,7 @@ Data Visualization Track
 
 ### Overview
 
-This project is a shout out to all of the powder hounds out there. Our target user is anyone who has ever planned a ski trip and found themself on a mountain with out snow. We wanted to create a resource that would help ski and snowboard enthusiasts plan better trips. 
+This project is a shout out to all of the powder hounds out there. Our target user is anyone who has ever planned a ski trip and found themself on a mountain without snow. We wanted to create a resource that would help ski and snowboard enthusiasts plan better trips. 
 
 Mountain excursions are expensive and can be present logistical challenges. Plane reservations, lift tickets, hotel / AirBnB accommodations – all can present obstacles for would be snow athletes.  While most dedicated riders can stomach the prices and planning, the trip can take a dramatic downturn if one element doesn’t fall into place: snow. Our goal is to deliver more snowy days on the hill. 
 
@@ -94,11 +94,8 @@ To render the visual in a browser, the assumption is that users will have Live S
 
 In the past 5-7 years. Resort capacity has become a concern at many mountains. Lift lines are increasing in length, pass/stay prices are rising and locals in some areas are not happy. A tool like this could drive an influx of non-local skiers to an area. This could:
 - Create surplus traffic on and off the mountain
-- Further raise the price of: 
-* Lift passes
-* Food / entertainment
-* Accommodations
-* Create safety concerns if weather reaches extreme snow accumulation levels
+- Further raise the price of lift passes, food / entertainment and accommodations
+- Create safety concerns if weather reaches extreme snow accumulation levels
 
 The information we used to create the tool is readily available to the public but creates a lower bar for searching for fresh snow. Our tool does not alert powder seekers of extreme weather and if it reached a point of heavy adoption, we would establish a set of guidelines around how to safely, and courteously, plan your trip. Both the Ikon and Epic pass sites address some of these concerns. 
 
