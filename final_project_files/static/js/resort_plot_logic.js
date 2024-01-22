@@ -164,29 +164,28 @@ function createResortMarkers(data, startPoint, forecast) {
       collapsed: false
     }).addTo(myMap);
 
-    let legend = L.control({position: 'bottomright'});
+    // Add a legend to the map
+    let legend = L.control({ position: "bottomright" });
     legend.onAdd = function() {
-      let div = L.DomUtil.create("div", "legend"),
-      snowProb = [">50%", "<50%", "Chance Not Available", "No Snow or Forecast Unavailable"];
-      let colors = ['green', 'yellow', 'blue', 'black'];
-      let labels = [];
+      let div = L.DomUtil.create("div", "info legend");
+      let categories = ['> 50%','< 50%','Percentage Unavailable','No Snow or Forecast Unavailable'];
+      let labelColors = ['green', 'yellow', 'blue', 'black'];
 
-      let legendInfo = "<h1 style='text-align: center'>Chance of Snow</h1>" +
-                        "<div class=\"min\">" + snowProb[0] + "<div>" +
-                        "<div class=\"min\">" + snowProb[1] + "<div>" +
-                        "<div class=\"min\">" + snowProb[2] + "<div>" +
-                        "<div class=\"min\">" + snowProb[3] + "</div>";
+      let legendInfo = "<h1>Chance of Snow<br /></h1>" +
+                      "<div class=\"labels\">" +
+                      "<div class=\"first\">" + categories[0] + "<span class=\"color-block\" style=\"background-color: " + labelColors[0] + "\"></span></div>" +
+                      "<div class=\"second\">" + categories[1] + "<span class=\"color-block\" style=\"background-color: " + labelColors[1] + "\"></span></div>" +
+                      "<div class=\"third\">" + categories[2] + "<span class=\"color-block\" style=\"background-color: " + labelColors[2] + "\"></span></div>" +
+                      "<div class=\"fourth\">" + categories[3] + "<span class=\"color-block\" style=\"background-color: " + labelColors[3] + "\"></span></div>" +
+                      "</div>";
 
       div.innerHTML = legendInfo;
 
-      snowProb.forEach(function(prob, index) {
-        labels.push("<li style=\"background-color: " + colors[index] + "\"></li>");
-      });
-
-      div.innerHTML += "<ul>" + labels.join("") + "</ul>";
       return div;
     };
-    legend.addTo(myMap);
+
+  // Adding the legend to the map
+  legend.addTo(myMap);
 };
 
 // Prompt the user for starting coordinates. For Phoenix enter lat: 33.5, long: -112
