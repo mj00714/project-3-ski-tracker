@@ -1,36 +1,19 @@
-# project-3-ski-tracker
+# project-3-ski-tracker 
 
 # Proposal / Overview
 
 For our third project, we're seeking to build on the material we've covered in the last few modules. We're aiming to create a visualization that will display ski resorts along with their recent snowfall metrics. 
 
 ### Data
-We're utilizing RapidAPI to pull a list of 148 ski resorts (satisfying the project requirement of 100+ records). There are two different views of the resort data- a basic and detailed view. 
+We're utilizing RapidAPI to pull a list of 148 ski resorts (satisfying the project requirement of 100+ records). There are two different views of the resort data- a basic and detailed view. We'll leverage the basic view to avoid paying for API usage. 
 
-At this point, we're unsure if we're going to use the recent snowfall totals provided by the ski resort API, or link the coordinates to a more comprehensive weather API. This could get complicated.  With that in mind, our initial plan is to pull the recent snowfall data from the resort API and detarmine next steps from there. 
+We'll extract, transform and load the data using Python libraries. The extraction will be a requests pull from the API. We'll use JSON libraries to clean and transform the data. Finally, we'll load the data into MongoDB using PyMongo. 
 
-##### Basic Resort View:
-- Resort name
-- Resort coordinates
-- Region / Country (double check this)
+Extraction and Load are straightforward. We'll transform the data to combine pages of API data and add pass access information for the '23/'24 season (specifically, Epic and Ikon pass access). The DB will act as a static golden source with the consolidated data. 
 
-##### Detailed Resort View:
-- Fill in
+### Visualization
 
-### JavaScript Code/Libraries
-
-We're seeking to create a map (not Leaflet) that will serve as an interactive visual. We're still deciding which map service to use but we plan to create layers that could slice the data by:
-- Resort size (by acreage)
-- Region
-- Inclusive pass (Ikon vs. Epic)
-- Percentage of lifts currently open
-- Current snowpack base depths
-
-Once we've selected our visualization library/tool we'll execute the following steps:
-- Create a base map
-- Create 2-4 map layers that can be dynamically selected by the user
-- Use the map's visualization tools to create markers indicating recent (12, 24, 48 hour) snowfall
-
+After cleaning the data, we'll use Leaflet to create a map visual that will provide the user with information about snow forecasts for the selected resorts. We'll merge the resorts coordinates with weather data from weather.gov to accomplish this. 
 
 # Project readme.md File
 
