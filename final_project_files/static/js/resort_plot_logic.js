@@ -164,7 +164,7 @@ function createResortMarkers(data, startPoint, forecast) {
       collapsed: false
     }).addTo(myMap);
 
-    // Add a legend to the map
+    // Create a legend to the map
     let legend = L.control({ position: "bottomright" });
     legend.onAdd = function() {
       let div = L.DomUtil.create("div", "info legend");
@@ -184,15 +184,15 @@ function createResortMarkers(data, startPoint, forecast) {
       return div;
     };
 
-  // Adding the legend to the map
+  // Add the legend to the map
   legend.addTo(myMap);
 };
 
 // Prompt the user for starting coordinates. For Phoenix enter lat: 33.5, long: -112
-// const userLatString = prompt("Please Enter Your Starting Latitude (33.5 for Phoenix): ");
-// const userLongString = prompt("Please Enter Your Starting Longitude (-112 for Phoenix): ");
-// const userStartPoint = [parseFloat(userLatString), parseFloat(userLongString)];
-const userStartPoint = [33.5, -112];
+const userLatString = prompt("Please Enter Your Starting Latitude (33.5 for Phoenix): ");
+const userLongString = prompt("Please Enter Your Starting Longitude (-112 for Phoenix): ");
+const userStartPoint = [parseFloat(userLatString), parseFloat(userLongString)];
+
 
 // Use createResortMarkers function to create the map from the imported resort data
 d3.json("resort_data.json").then((importedData) => {
