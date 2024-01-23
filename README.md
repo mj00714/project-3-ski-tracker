@@ -76,7 +76,7 @@ Here are the steps to run the tool:
 
 To render the visual in a browser, the assumption is that users will have Live Server (or a similart tool) installed. 
 
-1) The JavaScript file is set up run, as is. The code is documented and follows elements we used in class. You should not need to run any code directly from this file. 
+1) The JavaScript file and weather query are set up run, as is. The code is documented and follows elements we used in class. You should not need to run any code directly from this file. 
 
 2) If you're using Live Server, you'll navigate to ```index.html``` and select the <Go Live> button in the bottom right corner of VS Code. This will bring up a browser window. In our case, this is Chrome. 
 
