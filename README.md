@@ -76,15 +76,17 @@ Here are the steps to run the tool:
 
 To render the visual in a browser, the assumption is that users will have Live Server (or a similart tool) installed. 
 
-1) The JavaScript file and weather query are set up run, as is. The code is documented and follows elements we used in class. You should not need to run any code directly from this file. 
+1) The python file ```query.ipynb``` queries the data stored in the MongoDB as well as live weather data from the National Weather Service and Canadian Meterological website APIs. Clicking <run all> will first pull the data from the MongoDB then begin querying the weather APIs. As the program collects weather data, it will display an error message if it is unable to collect data from a specific ski resort. Afterwards, the program writes all the data to a json file called ```resort_data.json```.
 
-2) If you're using Live Server, you'll navigate to ```index.html``` and select the <Go Live> button in the bottom right corner of VS Code. This will bring up a browser window. In our case, this is Chrome. 
+2) The JavaScript file is set up run, as is. The code is documented and follows elements we used in class. You should not need to run any code directly from this file. The file pulls data from ```resort_data.json```. 
 
-3) You'll be presented with your first view option when the browser opens. Enter 12, 24, 36 or 48 to select the time horizon of the forecast. For example, if you're accessing the tool on a Thursday afternoon, you'll receive the Saturday forecast by selecting 36 or 48 hours. 
+3) If you're using Live Server, you'll navigate to ```index.html``` and select the <Go Live> button in the bottom right corner of VS Code. This will bring up a browser window. In our case, this is Chrome. 
 
-4) After you enter your time horizon, you'll have a blank map in front of you and will need to select the resorts that you want to analyze. If you are looking for Epic or Ikon pass resorts, check either, or both, of those boxes. If you'd like the full resort list, select all resorts. 
+4) You'll be presented with your first view option when the browser opens. First enter the latitude, then longitude, of the starting location when prompted. The program will use these entries to calculate the distance to each ski resort. Then enter 12, 24, 36 or 48 to select the time horizon of the forecast. For example, if you're accessing the tool on a Thursday afternoon, you'll receive the Saturday forecast by selecting 36 or 48 hours. 
 
-5) At this point, you should see markers on the map.
+5) After you enter your time horizon, you'll have a blank map in front of you and will need to select the resorts that you want to analyze. If you are looking for Epic or Ikon pass resorts, check either, or both, of those boxes. If you'd like the full resort list, select all resorts. 
+
+6) At this point, you should see markers on the map.
 - Green Marker: >50% chance of snow for the given period (US resorts)
 - Yellow Marker: <50% chance of snow for the given period (US resorts)
 - Black Marker: 0% chance of snow for the given period (US resorts)
